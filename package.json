@@ -6,7 +6,8 @@
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.0",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "vercel": "^37.6.1"
   },
   "name": "login-and-signup",
   "version": "1.0.0",
