@@ -7,36 +7,38 @@ const JWT_EXPIRY = "1h";
 
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
+  const startTime = Date.now();
+  console.log("Received signup request");
 
   try {
-    // Check if the user already exists
+    console.log("Checking for existing user...");
     const existingUser = await User.findOne({ email });
+    
     if (existingUser) {
+      console.log("User already exists.");
       return res.status(400).json({
         success: false,
         error: "User already exists. Please login or use a different email.",
       });
     }
 
-    // Hash the password before saving to the database
+    console.log("Hashing password...");
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create a new user
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
     });
 
-    // Save the user to the database
+    console.log("Saving new user to database...");
     await newUser.save();
 
-    // Generate JWT token for user authentication
     const payload = { userId: newUser._id };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY });
 
-    // Respond with the token and success message
+    console.log(`Signup process took ${Date.now() - startTime} ms`);
     res.status(201).json({
       success: true,
       message: "User registered successfully",
